@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Week03PS</string>
+    <string name="tvAmt">Amount</string>
+    <string name="etAmt">Enter Amount</string>
+    <string name="tvPax">Num of Pax</string>
+    <string name="etPax">Enter Num of Pax</string>
+    <string name="btnSVSEnabled">SVS</string>
+    <string name="btnSVSDisabled">NO SVS</string>
+    <string name="btnGSTEnabled">GST</string>
+    <string name="btnGSTDisabled">NO GST</string>
+    <string name="tvDisc">Discount (%)</string>
+    <string name="etDisc">Enter Discount (%)</string>
+    <string name="rbCash">Cash</string>
+    <string name="rbPaynow">PayNow</string>
+    <string name="btnSplit">SPLIT</string>
+    <string name="btnReset">RESET</string>
+
+</resources>
