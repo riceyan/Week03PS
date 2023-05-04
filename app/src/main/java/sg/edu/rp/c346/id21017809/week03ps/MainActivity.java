@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     ToggleButton tbtnGST;
     TextView tvDisc;
     EditText etInputDisc;
+    RadioGroup rgPayment;
     RadioButton rbCash;
     RadioButton rbPayNow;
     Button btnSplit;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         tbtnGST = findViewById(R.id.toggleButtonGST);
         tvDisc = findViewById(R.id.textViewDiscount);
         etInputDisc = findViewById(R.id.editTextDiscount);
+        rgPayment = findViewById(R.id.radioGroupPayment);
         rbCash = findViewById(R.id.radioButtonCash);
         rbPayNow = findViewById(R.id.radioButtonPayNow);
         btnSplit = findViewById(R.id.buttonSplit);
@@ -53,57 +55,55 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Code for the action
-                String totalAmt = String.format("%.2f",(etInputAmt/(etInputDisc/100.0)));
-                Double.parseDouble(totalAmt);
-                tvTotal.setText(totalAmt);
-                Double.parseDouble(totalAmt);
-                tvSplit.setText(doubleSplit);
+                double totalAmt = Double.parseDouble(String.valueOf(etInputAmt.getText()));
+                double totalPax = Double.parseDouble(String.valueOf(etInputPax.getText()));
+                double discount = Double.parseDouble(String.valueOf(etInputDisc.getText()));
 
-            }
-        });
+                if (tbtnSVS.isChecked()) {
+                    totalAmt = totalAmt * 1.1; //service charge
 
-        tbtnSVS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Code for the action
-                boolean isChecked = tbtnSVS.isChecked();
-                if (isChecked) {
-                    etInput.setEnabled(true);
+                } else if (tbtnGST.isChecked()) {
+                    totalAmt = totalAmt * 1.08;
+
+                } else if (tbtnSVS.isChecked() && tbtnGST.isChecked()) {
+                    totalAmt = totalAmt * 1.18;
                 } else {
-                    etInput.setEnabled(false);
+                    totalAmt = totalAmt;
+                }
+                double totalBill = totalAmt - (totalAmt * (discount / 100));
+                double splitTotalBill = totalBill / totalPax;
+
+                int checkedRadioId = rgPayment.getCheckedRadioButtonId();
+                if (checkedRadioId == R.id.radioButtonCash) {
+                    tvTotal.setText(String.format("Total Bill: $%.2f", totalBill));
+                    tvSplit.setText(String.format("Each Pays: $%.2f in cash", splitTotalBill));
+                } else if (checkedRadioId == R.id.radioButtonPayNow) {
+                    tvTotal.setText(String.format("Total Bill: $%.2f", totalBill));
+                    tvSplit.setText(String.format("Each Pays: $%.2f in cash", splitTotalBill));
                 }
             }
         });
-
-        tbtnGST.setOnClickListener(new View.OnClickListener() {
+        btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                // Code for the action
-                boolean isChecked = tbtnGST.isChecked();
-                if (isChecked) {
-                    etInput.setEnabled(true);
-                } else {
-                    etInput.setEnabled(false);
-                }
-            }
-        });
+            public void onClick(View view) {
+               etInputAmt.getText().clear();
+               etInputPax.getText().clear();
+               etInputDisc.getText().clear();
 
-        btnDisplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Code for the action
-                String stringResponse = etInput.getText().toString();
-                int checkedRadioId = rgGender.getCheckedRadioButtonId();
-                String newStringResponse;
-                if(checkedRadioId == R.id.radioButtonCash){
-                    //when cash selected
-                    newStringResponse = "Each pays: $" + doubleSplit + " in cash";
-                }
-                else{
-                    //when payNow selected
-                    newStringResponse = "Each pays: $" + doubleSplit + " via Paynow to";
-                }
-                tvDisplay.setText(newStringResponse);
+               if (tbtnSVS.isChecked()) {
+                   tbtnSVS.setChecked(false);
+               }
+               if (tbtnGST.isChecked()) {
+                   tbtnGST.setChecked(false);
+               }
+               if (rbCash.isChecked()) {
+                   rbCash.setChecked(false);
+               }
+               if (rbPayNow.isChecked()) {
+                   rbPayNow.setChecked(false);
+               }
+               tvTotal.setText("");
+               tvSplit.setText("");
             }
         });
 
